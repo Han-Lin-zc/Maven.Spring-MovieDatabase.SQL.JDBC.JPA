@@ -12,7 +12,15 @@ public class PersonService {
 
     PersonRepository repo;
 
-    public Person addPerson(Person person) {
+    public Person findById(Long id) {
+        return repo.findOne(id);
+    }
+
+    public List<Person> findAll() {
+        return (List<Person>) repo.findAll();
+    }
+
+    public Person createPerson(Person person) {
         return repo.save(person);
     }
 
@@ -29,10 +37,6 @@ public class PersonService {
     public Boolean deletePerson(Long id) {
         repo.delete(id);
         return true;
-    }
-
-    public Person findById(Long id) {
-        return repo.findOne(id);
     }
 
     public List<Person> findAllWithFirstName(String firstName) {

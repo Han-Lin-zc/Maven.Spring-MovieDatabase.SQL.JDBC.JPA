@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Controller
 public class PersonController {
 
@@ -16,13 +19,18 @@ public class PersonController {
     public PersonController(PersonService service) { this.service = service; }
 
     @GetMapping("/people/{id}")
-    public ResponseEntity<Person> getPerson(@PathVariable Long id) {
+    public ResponseEntity<Person> getPersonById(@PathVariable Long id) {
         return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/people/")
+    public ResponseEntity<Iterable<Person>> getAllPeople() {
+        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/people/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
-        return new ResponseEntity<>(service.addPerson(person), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.createPerson(person), HttpStatus.CREATED);
     }
 
     @PutMapping("/people/{id}")
@@ -38,4 +46,30 @@ public class PersonController {
     public ResponseEntity<Boolean> delete(@PathVariable Long id) {
         return new ResponseEntity<>(service.deletePerson(id), HttpStatus.NOT_FOUND);
     }
+
+    @GetMapping("/people/firstName/{firstName}")
+    public ResponseEntity<Iterable<Person>> getAllPeopleFirstName(@PathVariable String firstName) {
+        return new ResponseEntity<>(service.findAllWithFirstName(firstName), HttpStatus.OK);
+    }
+
+    @GetMapping("/people/firstName/{lastName}")
+    public ResponseEntity<Iterable<Person>> getAllPeopleLastName(@PathVariable String lastName) {
+        return new ResponseEntity<>(service.findAllWithLastName(lastName), HttpStatus.OK);
+    }
+
+    @GetMapping("/people/firstName/{birthday}")
+    public ResponseEntity<Iterable<Person>> getAllPeopleBirthday(@PathVariable String birthday) {
+        return new ResponseEntity<>(service.findAllWithBirthday(birthday), HttpStatus.OK);
+    }
+
+    @GetMapping("/people/lastName")
+    public ResponseEntity<Map<String, List<Person>>> getMappingOfLastName() {
+        return new ResponseEntity<>(service.findLastNameMap(), HttpStatus.OK);
+    }
+
+    @GetMapping("/people/lastName")
+    public ResponseEntity<Map<String, List<Person>>> getMappingOfFirstName() {
+        return new ResponseEntity<>(service.findFirstNameMap(), HttpStatus.OK);
+    }
+
 }
